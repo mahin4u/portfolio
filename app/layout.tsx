@@ -3,8 +3,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { WhatsAppButton } from "@/components/WhatsAppButton";
-import { whatsappLink } from "@/lib/site";
 import { getSiteConfig } from "@/lib/content";
 
 const inter = Inter({
@@ -60,7 +58,6 @@ export default async function RootLayout({
         <Navbar site={site} />
         <main className="flex-1">{children}</main>
         <Footer site={site} />
-        <WhatsAppButton href={whatsappLink(site)} />
       </body>
     </html>
   );
