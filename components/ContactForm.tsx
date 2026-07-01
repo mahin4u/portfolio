@@ -2,7 +2,6 @@
 
 import { useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
-import { site } from "@/lib/site";
 
 type Status = "idle" | "sending" | "sent";
 
@@ -13,7 +12,7 @@ type Status = "idle" | "sending" | "sent";
  * a static Netlify deploy). To use Netlify Forms instead, add `data-netlify`
  * attributes — see the commented block below.
  */
-export function ContactForm() {
+export function ContactForm({ email }: { email: string }) {
   const [status, setStatus] = useState<Status>("idle");
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -30,7 +29,7 @@ export function ContactForm() {
       `${message}\n\n— ${name}\n${email}`
     );
     // Open the user's mail client with a prefilled message.
-    window.location.href = `mailto:${site.email}?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
     setStatus("sent");
   }
 

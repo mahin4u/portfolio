@@ -1,4 +1,4 @@
-# Mohim Mahdi Hassan — "The Navigator's Blue" Portfolio
+# Mahin Mahadi Hassan — "The Navigator's Blue" Portfolio
 
 A production-grade personal portfolio built with **Next.js (App Router)**,
 **TypeScript**, **Tailwind CSS** and **Framer Motion**, optimized for deployment
@@ -11,8 +11,29 @@ on **Netlify**.
 - **Gallery** — CSS-masonry photography grid with hover metadata, ready for `next/image`.
 - **Blog** — local MDX articles rendered with `next-mdx-remote`, statically generated.
 - **Connect** — contact form (mailto by default) + global floating WhatsApp button.
+- **Admin CMS (`/admin`)** — password-protected dashboard to edit site texts, gallery, blog posts and the timeline, backed by **Neon Postgres**. Image **upload** (Netlify Blobs) *or* paste a hosted URL.
 - SEO: metadata, Open Graph, `sitemap.xml`, `robots.txt`, and an app icon.
 - Fully responsive, accessible, reduced-motion aware.
+
+## 🔐 Admin CMS
+
+The site works fully **without** a database — it serves the built-in content in
+`lib/*.ts` and `content/blog/*.mdx`. Connecting Neon turns on live editing.
+
+1. **Create a Neon database** at [neon.tech](https://neon.tech) (free tier) and
+   copy the connection string.
+2. **Set environment variables** (locally in `.env.local`, and in Netlify under
+   *Site settings → Environment variables*) — see [`.env.example`](.env.example):
+   - `DATABASE_URL` — Neon connection string.
+   - `ADMIN_PASSWORD` — the password for `/admin`.
+   - `SESSION_SECRET` — long random string for signing session cookies.
+3. Deploy (or `npm run dev`), visit **`/admin`**, sign in.
+4. Click **“Seed from defaults”** on the settings page to copy the current
+   content into the database, then edit anything.
+
+Content edits trigger on-demand revalidation, so the public pages update within
+seconds. Image uploads require the Netlify runtime (prod or `netlify dev`); in
+plain `next dev`, paste an image URL instead.
 
 ## 🎨 Brand — "The Navigator's Blue"
 

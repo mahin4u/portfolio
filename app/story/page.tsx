@@ -1,14 +1,18 @@
 import type { Metadata } from "next";
 import { Timeline } from "@/components/Timeline";
 import { Reveal } from "@/components/ui/Reveal";
+import { getMilestones } from "@/lib/content";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "The Story",
   description:
-    "The journey of Mohim Mahdi Hassan — from transistors in Bangladesh to stock trading in Belgium.",
+    "The journey of Mahin Mahadi Hassan — from transistors in Bangladesh to stock trading in Belgium.",
 };
 
-export default function StoryPage() {
+export default async function StoryPage() {
+  const milestones = await getMilestones();
   return (
     <>
       <section className="relative overflow-hidden bg-midnight text-slate-canvas">
@@ -28,7 +32,7 @@ export default function StoryPage() {
       </section>
 
       <div className="container-page py-20 sm:py-28">
-        <Timeline />
+        <Timeline milestones={milestones} />
       </div>
     </>
   );

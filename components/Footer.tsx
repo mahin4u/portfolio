@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { nav, site } from "@/lib/site";
+import { nav, type SiteConfig } from "@/lib/site";
 
-export function Footer() {
+export function Footer({ site }: { site: SiteConfig }) {
   return (
     <footer className="bg-midnight text-slate-canvas">
       <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { site } from "@/lib/site";
+import type { Focus } from "@/lib/site";
 
 function Icon({ name }: { name: string }) {
   if (name === "chart") {
@@ -31,10 +31,10 @@ function Icon({ name }: { name: string }) {
   );
 }
 
-export function FocusCards() {
+export function FocusCards({ focuses }: { focuses: Focus[] }) {
   return (
     <div className="grid gap-6 sm:grid-cols-2">
-      {site.focuses.map((focus, i) => {
+      {focuses.map((focus, i) => {
         const isElectric = focus.accent === "electric";
         return (
           <motion.div

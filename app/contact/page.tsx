@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 import { ContactForm } from "@/components/ContactForm";
 import { Reveal } from "@/components/ui/Reveal";
-import { site, whatsappLink } from "@/lib/site";
+import { whatsappLink } from "@/lib/site";
+import { getSiteConfig } from "@/lib/content";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Connect",
   description:
-    "Get in touch with Mohim Mahdi Hassan — supply chain, trading, photography or a conversation about curiosity.",
+    "Get in touch with Mahin Mahadi Hassan — supply chain, trading, photography or a conversation about curiosity.",
 };
 
 const projects = [
@@ -27,7 +30,8 @@ const projects = [
   },
 ];
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const site = await getSiteConfig();
   return (
     <div className="container-page py-16 sm:py-24">
       <Reveal>
@@ -51,7 +55,7 @@ export default function ContactPage() {
               I read everything and reply personally.
             </p>
             <div className="mt-6">
-              <ContactForm />
+              <ContactForm email={site.email} />
             </div>
           </div>
         </Reveal>
@@ -60,7 +64,7 @@ export default function ContactPage() {
         <Reveal delay={0.12} className="lg:col-span-2">
           <div className="space-y-6">
             <a
-              href={whatsappLink()}
+              href={whatsappLink(site)}
               target="_blank"
               rel="noopener noreferrer"
               className="card group flex items-center justify-between hover:shadow-glow-cyan"

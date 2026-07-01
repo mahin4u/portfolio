@@ -1,23 +1,55 @@
 /**
- * Central site configuration. Update these values to personalize the portfolio
- * without touching any component code.
+ * Static site configuration — used as the seed + fallback for the CMS.
+ * When the database is configured, values here are overridden by the
+ * `settings` row (see lib/content.ts → getSiteConfig).
  */
-export const site = {
-  name: "Mohim Mahdi Hassan",
-  shortName: "Mahdi",
+
+export type Accent = "electric" | "horizon";
+
+export interface Focus {
+  title: string;
+  description: string;
+  accent: Accent;
+  icon: string; // "route" | "chart"
+}
+
+export interface SiteConfig {
+  name: string;
+  shortName: string;
+  age: number;
+  role: string;
+  tagline: string;
+  description: string;
+  url: string;
+  location: string;
+  email: string;
+  whatsapp: {
+    number: string; // international format, digits only
+    presetMessage: string;
+  };
+  socials: {
+    linkedin: string;
+    instagram: string;
+    github: string;
+  };
+  focuses: Focus[];
+}
+
+export const defaultSite: SiteConfig = {
+  name: "Mahin Mahadi Hassan",
+  shortName: "Mahin",
   age: 22,
   role: "Everything-Holic · Problem Solver",
   tagline:
     "Together is better — making the world bigger, beautiful, and ensuring everyone has a right to smile.",
   description:
-    "The portfolio of Mohim Mahdi Hassan — a curiosity-driven navigator working across Global Supply Chain and Stock Trading, with roots in arts, photography and technology.",
-  url: "https://mahdi.example.com", // TODO: replace with the custom domain once mapped in Netlify.
+    "The portfolio of Mahin Mahadi Hassan — a curiosity-driven navigator working across Global Supply Chain and Stock Trading, with roots in arts, photography and technology.",
+  url: "https://mahin.example.com", // TODO: replace with the custom domain once mapped in Netlify.
   location: "Mechelen, Belgium",
   email: "asakashthereble@gmail.com",
-  // WhatsApp Click-to-Chat — international format, digits only (no +, spaces or dashes).
   whatsapp: {
-    number: "32000000000", // TODO: replace with Mahdi's real WhatsApp number.
-    presetMessage: "Hi Mahdi! I found your portfolio and would love to connect.",
+    number: "32000000000", // TODO: replace with Mahin's real WhatsApp number.
+    presetMessage: "Hi Mahin! I found your portfolio and would love to connect.",
   },
   socials: {
     linkedin: "https://www.linkedin.com/",
@@ -29,20 +61,18 @@ export const site = {
       title: "Global Supply Chain",
       description:
         "Mapping the movement of goods across borders — systems thinking applied to logistics, operations and trade.",
-      accent: "electric" as const,
+      accent: "electric",
       icon: "route",
     },
     {
       title: "Stock Trading",
       description:
         "Full-time trading with a system-level lens: reading markets like machines, disciplined by data and probability.",
-      accent: "horizon" as const,
+      accent: "horizon",
       icon: "chart",
     },
   ],
-} as const;
-
-export type SiteConfig = typeof site;
+};
 
 export const nav = [
   { href: "/", label: "Home" },
@@ -52,8 +82,8 @@ export const nav = [
   { href: "/contact", label: "Connect" },
 ] as const;
 
-/** Builds the wa.me deep link from the configured number + preset message. */
-export function whatsappLink() {
-  const { number, presetMessage } = site.whatsapp;
+/** Builds a wa.me deep link from a site config's WhatsApp settings. */
+export function whatsappLink(config: Pick<SiteConfig, "whatsapp">): string {
+  const { number, presetMessage } = config.whatsapp;
   return `https://wa.me/${number}?text=${encodeURIComponent(presetMessage)}`;
 }

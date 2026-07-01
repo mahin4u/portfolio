@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getAllPosts } from "@/lib/blog";
+import { getPosts } from "@/lib/content";
 import { Reveal } from "@/components/ui/Reveal";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Blog",
   description:
-    "Thoughts and market musings from Mohim Mahdi Hassan on supply chain, trading, systems and curiosity.",
+    "Thoughts and market musings from Mahin Mahadi Hassan on supply chain, trading, systems and curiosity.",
 };
 
-export default function BlogPage() {
-  const posts = getAllPosts();
+export default async function BlogPage() {
+  const posts = await getPosts();
 
   return (
     <div className="container-page py-16 sm:py-24">

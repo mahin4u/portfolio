@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { site } from "@/lib/site";
+import type { SiteConfig } from "@/lib/site";
 
 const container = {
   hidden: {},
@@ -13,7 +13,7 @@ const item = {
   show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
 };
 
-export function Hero() {
+export function Hero({ site }: { site: SiteConfig }) {
   return (
     <section className="relative overflow-hidden bg-midnight text-slate-canvas">
       {/* Ambient glow + grid */}

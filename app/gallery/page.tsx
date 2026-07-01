@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
-import { getGallery } from "@/lib/gallery";
+import { getGalleryItems } from "@/lib/content";
 import { GalleryGrid } from "@/components/GalleryGrid";
 import { Reveal } from "@/components/ui/Reveal";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Gallery",
   description:
-    "Travel and portrait photography by Mohim Mahdi Hassan — captured across Bangladesh and Belgium.",
+    "Travel and portrait photography by Mahin Mahadi Hassan — captured across Bangladesh and Belgium.",
 };
 
-export default function GalleryPage() {
-  const items = getGallery();
+export default async function GalleryPage() {
+  const items = await getGalleryItems();
 
   return (
     <div className="container-page py-16 sm:py-24">

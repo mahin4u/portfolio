@@ -2,9 +2,9 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
-import { milestones } from "@/lib/story";
+import type { Milestone } from "@/lib/story";
 
-export function Timeline() {
+export function Timeline({ milestones }: { milestones: Milestone[] }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,

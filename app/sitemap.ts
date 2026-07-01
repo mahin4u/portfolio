@@ -1,8 +1,8 @@
 import type { MetadataRoute } from "next";
-import { site } from "@/lib/site";
-import { getAllSlugs } from "@/lib/blog";
+import { getSiteConfig, getPostSlugs } from "@/lib/content";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const site = await getSiteConfig();
   const base = site.url.replace(/\/$/, "");
   const routes = ["", "/story", "/gallery", "/blog", "/contact"].map((path) => ({
     url: `${base}${path}`,
@@ -11,7 +11,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: path === "" ? 1 : 0.7,
   }));
 
-  const posts = getAllSlugs().map((slug) => ({
+  const slugs = await getPostSlugs();
+  const posts = slugs.map((slug) => ({
     url: `${base}/blog/${slug}`,
     lastModified: new Date(),
     changeFrequency: "monthly" as const,

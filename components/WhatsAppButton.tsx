@@ -1,16 +1,15 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { whatsappLink } from "@/lib/site";
 
 /**
  * Global floating action button linking to WhatsApp Click-to-Chat.
  * Rendered once from the root layout so it's present on every page.
  */
-export function WhatsAppButton() {
+export function WhatsAppButton({ href }: { href: string }) {
   return (
     <motion.a
-      href={whatsappLink()}
+      href={href}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat on WhatsApp"

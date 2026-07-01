@@ -2,7 +2,7 @@
   "name": "navigators-blue-portfolio",
   "version": "1.0.0",
   "private": true,
-  "description": "Mohim Mahdi Hassan — 'The Navigator's Blue' personal portfolio. Story, gallery, blog and connect.",
+  "description": "Mahin Mahadi Hassan — 'The Navigator's Blue' personal portfolio. Story, gallery, blog and connect.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -10,7 +10,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@netlify/blobs": "^8.1.0",
+    "@neondatabase/serverless": "^0.10.4",
     "framer-motion": "^11.11.17",
+    "jose": "^5.9.6",
     "gray-matter": "^4.0.3",
     "next": "14.2.35",
     "next-mdx-remote": "^5.0.0",

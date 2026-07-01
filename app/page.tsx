@@ -3,17 +3,25 @@ import { Hero } from "@/components/Hero";
 import { FocusCards } from "@/components/FocusCards";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
-import { getAllPosts } from "@/lib/blog";
-import { getGallery } from "@/lib/gallery";
+import { getSiteConfig, getGalleryItems, getPosts } from "@/lib/content";
 import { GalleryTile } from "@/components/GalleryTile";
 
-export default function HomePage() {
-  const latestPosts = getAllPosts().slice(0, 2);
-  const previewShots = getGallery().slice(0, 4);
+// Revalidate periodically so admin edits appear (ISR); admin saves also
+// trigger on-demand revalidation via revalidatePath.
+export const revalidate = 60;
+
+export default async function HomePage() {
+  const [site, gallery, posts] = await Promise.all([
+    getSiteConfig(),
+    getGalleryItems(),
+    getPosts(),
+  ]);
+  const latestPosts = posts.slice(0, 2);
+  const previewShots = gallery.slice(0, 4);
 
   return (
     <>
-      <Hero />
+      <Hero site={site} />
 
       {/* Current focuses */}
       <Section>
@@ -25,7 +33,7 @@ export default function HomePage() {
           />
         </Reveal>
         <div className="mt-12">
-          <FocusCards />
+          <FocusCards focuses={site.focuses} />
         </div>
       </Section>
 

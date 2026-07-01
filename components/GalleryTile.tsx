@@ -41,6 +41,9 @@ export function GalleryTile({
           alt={`${item.title} — ${item.location}, ${item.country}`}
           fill
           sizes="(max-width: 768px) 50vw, 33vw"
+          // Pasted external URLs bypass the optimizer so any host works without
+          // remotePatterns config; our own /api/media routes stay optimized.
+          unoptimized={!item.src.startsWith("/")}
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
       ) : (

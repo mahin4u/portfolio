@@ -1,10 +1,11 @@
 import type { MetadataRoute } from "next";
-import { site } from "@/lib/site";
+import { getSiteConfig } from "@/lib/content";
 
-export default function robots(): MetadataRoute.Robots {
+export default async function robots(): Promise<MetadataRoute.Robots> {
+  const site = await getSiteConfig();
   const base = site.url.replace(/\/$/, "");
   return {
-    rules: { userAgent: "*", allow: "/" },
+    rules: { userAgent: "*", allow: "/", disallow: "/admin" },
     sitemap: `${base}/sitemap.xml`,
   };
 }

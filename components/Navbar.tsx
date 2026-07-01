@@ -4,9 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { nav, site } from "@/lib/site";
+import { nav, type SiteConfig } from "@/lib/site";
 
-export function Navbar() {
+export function Navbar({ site }: { site: SiteConfig }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);

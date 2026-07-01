@@ -2,18 +2,23 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { getAllSlugs, getPostBySlug } from "@/lib/blog";
+import { getPost, getPostSlugs } from "@/lib/content";
 
 interface Params {
   params: { slug: string };
 }
 
-export function generateStaticParams() {
-  return getAllSlugs().map((slug) => ({ slug }));
+// Posts created in the admin after build render on-demand (ISR).
+export const revalidate = 60;
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  const slugs = await getPostSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
-export function generateMetadata({ params }: Params): Metadata {
-  const post = getPostBySlug(params.slug);
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
+  const post = await getPost(params.slug);
   if (!post) return { title: "Post not found" };
   return {
     title: post.title,
@@ -22,8 +27,8 @@ export function generateMetadata({ params }: Params): Metadata {
   };
 }
 
-export default function BlogPostPage({ params }: Params) {
-  const post = getPostBySlug(params.slug);
+export default async function BlogPostPage({ params }: Params) {
+  const post = await getPost(params.slug);
   if (!post) notFound();
 
   return (
