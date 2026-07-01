@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --midnight: #0b132b;
+  --canvas: #f4f7fc;
+  --electric: #3a86ff;
+  --horizon: #4cc9f0;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-slate-canvas text-midnight antialiased;
+    font-feature-settings: "cv11", "ss01";
+  }
+
+  ::selection {
+    @apply bg-electric/25 text-midnight;
+  }
+
+  /* Custom scrollbar for a polished feel */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-electric/40 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-electric/70;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+  }
+
+  .btn-primary {
+    @apply btn bg-electric text-white shadow-glow hover:bg-electric-600 focus-visible:ring-electric;
+  }
+
+  .btn-ghost {
+    @apply btn border border-midnight/15 bg-white/60 text-midnight hover:border-electric/50 hover:text-electric;
+  }
+
+  .btn-cyan {
+    @apply btn bg-horizon text-midnight shadow-glow-cyan hover:bg-horizon-600 focus-visible:ring-horizon;
+  }
+
+  .card {
+    @apply rounded-2xl border border-midnight/10 bg-white/70 p-6 shadow-sm backdrop-blur transition-all duration-300;
+  }
+
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.2em] text-electric;
+  }
+}
+
+/* Reduced-motion respect */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
