@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { Hero } from "@/components/Hero";
 import { FocusCards } from "@/components/FocusCards";
+import { WhyWhatHow } from "@/components/WhyWhatHow";
+import { ScrollScene } from "@/components/fx/ScrollScene";
+import { TiltCard } from "@/components/fx/TiltCard";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
 import { getSiteConfig, getGalleryItems, getPosts } from "@/lib/content";
@@ -25,23 +28,26 @@ export default async function HomePage() {
 
       {/* Current focuses */}
       <Section>
-        <Reveal>
+        <ScrollScene>
           <SectionHeading
             eyebrow="Where my energy goes"
             title="Two engines, one system"
             subtitle="Everything I build connects — the same curiosity that took apart transistors now reads markets and moves goods across the globe."
           />
-        </Reveal>
-        <div className="mt-12">
-          <FocusCards focuses={site.focuses} />
-        </div>
+          <div className="mt-12">
+            <FocusCards focuses={site.focuses} />
+          </div>
+        </ScrollScene>
       </Section>
+
+      {/* Artistic interlude — the engine behind every pivot */}
+      <WhyWhatHow />
 
       {/* Story teaser */}
       <Section dark className="relative overflow-hidden">
         <div className="pointer-events-none absolute -right-32 top-0 h-80 w-80 rounded-full bg-electric/10 blur-3xl" />
-        <div className="grid items-center gap-12 lg:grid-cols-2">
-          <Reveal>
+        <ScrollScene>
+          <div className="grid items-center gap-12 lg:grid-cols-2">
             <div>
               <p className="eyebrow mb-3 text-horizon">The Story</p>
               <h2 className="text-3xl font-bold sm:text-4xl">
@@ -55,27 +61,24 @@ export default async function HomePage() {
                 Explore the timeline →
               </Link>
             </div>
-          </Reveal>
-          <Reveal delay={0.15}>
             <ul className="space-y-4">
               {[
                 ["🇧🇩", "Curiosity, arts & the camera"],
                 ["🇧🇪", "Supply chain & Blink Media"],
                 ["📈", "Full-time stock trading"],
               ].map(([flag, label]) => (
-                <li
-                  key={label}
-                  className="flex items-center gap-4 rounded-xl border border-white/10 bg-white/5 px-5 py-4"
-                >
-                  <span className="text-2xl">{flag}</span>
-                  <span className="font-medium text-slate-canvas/90">
-                    {label}
-                  </span>
-                </li>
+                <TiltCard key={label} max={6}>
+                  <li className="flex items-center gap-4 rounded-xl border border-white/10 bg-white/5 px-5 py-4">
+                    <span className="text-2xl">{flag}</span>
+                    <span className="font-medium text-slate-canvas/90">
+                      {label}
+                    </span>
+                  </li>
+                </TiltCard>
               ))}
             </ul>
-          </Reveal>
-        </div>
+          </div>
+        </ScrollScene>
       </Section>
 
       {/* Gallery preview */}
@@ -93,13 +96,15 @@ export default async function HomePage() {
             </Link>
           </Reveal>
         </div>
-        <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-4">
-          {previewShots.map((shot, i) => (
-            <Reveal key={shot.id} delay={i * 0.08}>
-              <GalleryTile item={shot} compact />
-            </Reveal>
-          ))}
-        </div>
+        <ScrollScene className="mt-10">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+            {previewShots.map((shot) => (
+              <TiltCard key={shot.id} max={10}>
+                <GalleryTile item={shot} compact />
+              </TiltCard>
+            ))}
+          </div>
+        </ScrollScene>
       </Section>
 
       {/* Blog preview */}
@@ -118,40 +123,42 @@ export default async function HomePage() {
               </Link>
             </Reveal>
           </div>
-          <div className="mt-10 grid gap-6 md:grid-cols-2">
-            {latestPosts.map((post, i) => (
-              <Reveal key={post.slug} delay={i * 0.1}>
-                <Link
-                  href={`/blog/${post.slug}`}
-                  className="group block h-full rounded-2xl border border-white/10 bg-white/5 p-7 transition-all hover:border-horizon/40 hover:bg-white/10"
-                >
-                  <span className="text-xs font-semibold uppercase tracking-widest text-horizon">
-                    {post.category}
-                  </span>
-                  <h3 className="mt-3 text-xl font-bold transition-colors group-hover:text-horizon">
-                    {post.title}
-                  </h3>
-                  <p className="mt-2 text-sm text-slate-canvas/70">
-                    {post.excerpt}
-                  </p>
-                  <p className="mt-5 text-xs text-slate-canvas/50">
-                    {new Date(post.date).toLocaleDateString("en-GB", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })}{" "}
-                    · {post.readingTime}
-                  </p>
-                </Link>
-              </Reveal>
-            ))}
-          </div>
+          <ScrollScene className="mt-10">
+            <div className="grid gap-6 md:grid-cols-2">
+              {latestPosts.map((post) => (
+                <TiltCard key={post.slug} max={5}>
+                  <Link
+                    href={`/blog/${post.slug}`}
+                    className="group block h-full rounded-2xl border border-white/10 bg-white/5 p-7 transition-colors hover:border-horizon/40 hover:bg-white/10"
+                  >
+                    <span className="text-xs font-semibold uppercase tracking-widest text-horizon">
+                      {post.category}
+                    </span>
+                    <h3 className="mt-3 text-xl font-bold transition-colors group-hover:text-horizon">
+                      {post.title}
+                    </h3>
+                    <p className="mt-2 text-sm text-slate-canvas/70">
+                      {post.excerpt}
+                    </p>
+                    <p className="mt-5 text-xs text-slate-canvas/50">
+                      {new Date(post.date).toLocaleDateString("en-GB", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })}{" "}
+                      · {post.readingTime}
+                    </p>
+                  </Link>
+                </TiltCard>
+              ))}
+            </div>
+          </ScrollScene>
         </Section>
       )}
 
       {/* CTA */}
       <Section>
-        <Reveal>
+        <ScrollScene>
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-electric to-electric-600 px-8 py-16 text-center text-white sm:px-16">
             <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-horizon/30 blur-3xl" />
             <h2 className="relative mx-auto max-w-2xl text-3xl font-bold sm:text-4xl">
@@ -168,7 +175,7 @@ export default async function HomePage() {
               Start a conversation
             </Link>
           </div>
-        </Reveal>
+        </ScrollScene>
       </Section>
     </>
   );

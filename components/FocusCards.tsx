@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import type { Focus } from "@/lib/site";
+import { TiltCard } from "@/components/fx/TiltCard";
 
 function Icon({ name }: { name: string }) {
   if (name === "chart") {
@@ -37,15 +38,14 @@ export function FocusCards({ focuses }: { focuses: Focus[] }) {
       {focuses.map((focus, i) => {
         const isElectric = focus.accent === "electric";
         return (
-          <motion.div
-            key={focus.title}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.6, delay: i * 0.1 }}
-            whileHover={{ y: -6 }}
-            className="card group relative overflow-hidden"
-          >
+          <TiltCard key={focus.title} max={7}>
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.6, delay: i * 0.1 }}
+              className="card group relative h-full overflow-hidden"
+            >
             <div
               className={`absolute -right-10 -top-10 h-32 w-32 rounded-full blur-2xl transition-opacity duration-300 ${
                 isElectric ? "bg-electric/15" : "bg-horizon/20"
@@ -69,7 +69,8 @@ export function FocusCards({ focuses }: { focuses: Focus[] }) {
                 isElectric ? "bg-electric" : "bg-horizon"
               }`}
             />
-          </motion.div>
+            </motion.div>
+          </TiltCard>
         );
       })}
     </div>

@@ -44,9 +44,9 @@ export const defaultSite: SiteConfig = {
     "Together is better — making the world bigger, beautiful, and ensuring everyone has a right to smile.",
   description:
     "The portfolio of Mahin Mahadi Hassan — a curiosity-driven navigator working across Global Supply Chain and Stock Trading, with roots in arts, photography and technology.",
-  url: "https://mahin.example.com", // TODO: replace with the custom domain once mapped in Netlify.
+  url: "https://mahinmahdi.com", // TODO: replace with the custom domain once mapped in Netlify.
   location: "Mechelen, Belgium",
-  email: "asakashthereble@gmail.com",
+  email: "mahination.be@gmail.com",
   whatsapp: {
     number: "32000000000", // TODO: replace with Mahin's real WhatsApp number.
     presetMessage: "Hi Mahin! I found your portfolio and would love to connect.",

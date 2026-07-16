@@ -83,7 +83,7 @@ export function Footer({ site }: { site: SiteConfig }) {
           <p>
             © {new Date().getFullYear()} {site.name}. All rights reserved.
           </p>
-          <p>Built with Next.js · Deployed on Netlify</p>
+          <p>Build and Developed by Sabbir Hossain</p>
         </div>
       </div>
     </footer>
