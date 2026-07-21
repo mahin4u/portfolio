@@ -9,6 +9,15 @@ export function SavedBanner({
 }) {
   if (!searchParams) return null;
 
+  if (searchParams.error) {
+    return (
+      <div className="rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm font-medium text-red-800">
+        ✗ Saving failed. Check that the database is reachable (DATABASE_URL) —
+        details are in the server logs.
+      </div>
+    );
+  }
+
   let message: string | null = null;
   if (searchParams.saved) message = "✓ Changes saved. The public site updates within a few seconds.";
   if (searchParams.deleted) message = "✓ Deleted.";

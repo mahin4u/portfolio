@@ -13,8 +13,15 @@ const inter = Inter({
 
 export async function generateMetadata(): Promise<Metadata> {
   const site = await getSiteConfig();
+  // A malformed URL in the DB must never crash every page's metadata.
+  let metadataBase: URL;
+  try {
+    metadataBase = new URL(site.url);
+  } catch {
+    metadataBase = new URL("https://mahinmahdi.com");
+  }
   return {
-    metadataBase: new URL(site.url),
+    metadataBase,
     title: {
       default: `${site.name} — ${site.role}`,
       template: `%s · ${site.shortName}`,

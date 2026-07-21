@@ -1,5 +1,6 @@
 import "server-only";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { SESSION_COOKIE, verifySessionToken } from "@/lib/auth";
 
 /**
@@ -14,9 +15,13 @@ export async function isAuthenticated(): Promise<boolean> {
   return verifySessionToken(token);
 }
 
-/** Throws if the caller is not an authenticated admin. */
+/**
+ * Sends unauthenticated callers to the login page instead of crashing the
+ * request with an unhandled error (which surfaces to visitors as
+ * "Application error: a server-side exception has occurred").
+ */
 export async function requireAdmin(): Promise<void> {
   if (!(await isAuthenticated())) {
-    throw new Error("Unauthorized");
+    redirect("/admin/login");
   }
 }

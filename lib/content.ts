@@ -133,13 +133,18 @@ export interface MilestoneRecord extends Milestone {
 
 export async function getMilestoneRecords(): Promise<MilestoneRecord[]> {
   if (!hasDb()) return [];
-  await ensureSchema();
-  const rows = await getSql()`SELECT * FROM milestones ORDER BY sort_order ASC`;
-  return rows.map((r) => ({
-    ...rowToMilestone(r),
-    id: String(r.id),
-    sortOrder: Number(r.sort_order ?? 0),
-  }));
+  try {
+    await ensureSchema();
+    const rows = await getSql()`SELECT * FROM milestones ORDER BY sort_order ASC`;
+    return rows.map((r) => ({
+      ...rowToMilestone(r),
+      id: String(r.id),
+      sortOrder: Number(r.sort_order ?? 0),
+    }));
+  } catch (err) {
+    console.error("getMilestoneRecords failed:", err);
+    return [];
+  }
 }
 
 export async function upsertMilestone(m: MilestoneRecord): Promise<void> {
