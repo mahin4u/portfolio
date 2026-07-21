@@ -1,6 +1,8 @@
 import { getSiteConfig } from "@/lib/content";
 import { hasDb } from "@/lib/db";
 import { saveSiteAction, seedAction } from "@/app/admin/actions";
+import { SubmitButton } from "@/components/admin/SubmitButton";
+import { SavedBanner } from "@/components/admin/SavedBanner";
 
 export const dynamic = "force-dynamic";
 
@@ -15,11 +17,16 @@ function Label({ children }: { children: React.ReactNode }) {
 const inputCls =
   "w-full rounded-lg border border-midnight/15 bg-white px-3 py-2 text-sm outline-none focus:border-electric";
 
-export default async function AdminSettingsPage() {
+export default async function AdminSettingsPage({
+  searchParams,
+}: {
+  searchParams?: Record<string, string | string[] | undefined>;
+}) {
   const site = await getSiteConfig();
 
   return (
     <div className="space-y-10">
+      <SavedBanner searchParams={searchParams} />
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold">Site settings</h1>
@@ -148,9 +155,7 @@ export default async function AdminSettingsPage() {
         </section>
 
         <div className="flex items-center gap-3">
-          <button type="submit" className="btn-primary" disabled={!hasDb()}>
-            Save changes
-          </button>
+          <SubmitButton disabled={!hasDb()}>Save changes</SubmitButton>
           {!hasDb() && (
             <span className="text-sm text-midnight/50">
               Connect a database to enable saving.

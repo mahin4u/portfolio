@@ -19,6 +19,8 @@ export interface GalleryItem {
   /** Aspect ratio used for the masonry tile placeholder. */
   ratio: "portrait" | "landscape" | "square";
   accent: GalleryAccent;
+  /** Position in the grid; populated from the DB for admin editing. */
+  sortOrder?: number;
 }
 
 export const gallery: GalleryItem[] = [

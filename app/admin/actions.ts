@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/session";
 import { defaultSite, type SiteConfig, type Accent } from "@/lib/site";
 import type { GalleryItem } from "@/lib/gallery";
@@ -75,12 +76,14 @@ export async function saveSiteAction(fd: FormData) {
 
   await saveSiteConfig(config);
   revalidateAll();
+  redirect("/admin?saved=1");
 }
 
 export async function seedAction() {
   await requireAdmin();
   await seedFromDefaults();
   revalidateAll();
+  redirect("/admin?seeded=1");
 }
 
 /* -------------------------------- Gallery -------------------------------- */
@@ -102,6 +105,7 @@ export async function saveGalleryAction(fd: FormData) {
   await upsertGalleryItem(item);
   revalidatePath("/gallery");
   revalidatePath("/");
+  redirect("/admin/gallery?saved=1");
 }
 
 export async function deleteGalleryAction(fd: FormData) {
@@ -109,6 +113,7 @@ export async function deleteGalleryAction(fd: FormData) {
   await deleteGalleryItem(str(fd, "id"));
   revalidatePath("/gallery");
   revalidatePath("/");
+  redirect("/admin/gallery?deleted=1");
 }
 
 /* --------------------------------- Blog ---------------------------------- */
@@ -129,6 +134,7 @@ export async function savePostAction(fd: FormData) {
   revalidatePath("/blog");
   revalidatePath(`/blog/${slug}`);
   revalidatePath("/");
+  redirect("/admin/blog?saved=1");
 }
 
 export async function deletePostAction(fd: FormData) {
@@ -138,6 +144,7 @@ export async function deletePostAction(fd: FormData) {
   revalidatePath("/blog");
   revalidatePath(`/blog/${slug}`);
   revalidatePath("/");
+  redirect("/admin/blog?deleted=1");
 }
 
 /* ------------------------------- Timeline -------------------------------- */
@@ -160,10 +167,12 @@ export async function saveMilestoneAction(fd: FormData) {
     sortOrder: Number(str(fd, "sortOrder", "0")) || 0,
   });
   revalidatePath("/story");
+  redirect("/admin/timeline?saved=1");
 }
 
 export async function deleteMilestoneAction(fd: FormData) {
   await requireAdmin();
   await deleteMilestone(str(fd, "id"));
   revalidatePath("/story");
+  redirect("/admin/timeline?deleted=1");
 }

@@ -60,6 +60,7 @@ function rowToGallery(r: Record<string, unknown>): GalleryItem {
     src: (r.src as string) || undefined,
     ratio: (r.ratio as GalleryItem["ratio"]) ?? "landscape",
     accent: (r.accent as GalleryItem["accent"]) ?? "electric",
+    sortOrder: Number(r.sort_order ?? 0),
   };
 }
 

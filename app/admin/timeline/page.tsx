@@ -1,6 +1,8 @@
 import { getMilestoneRecords, getMilestones, type MilestoneRecord } from "@/lib/content";
 import { hasDb } from "@/lib/db";
 import { saveMilestoneAction, deleteMilestoneAction } from "@/app/admin/actions";
+import { SubmitButton } from "@/components/admin/SubmitButton";
+import { SavedBanner } from "@/components/admin/SavedBanner";
 
 export const dynamic = "force-dynamic";
 
@@ -48,15 +50,19 @@ function MilestoneForm({ m }: { m?: MilestoneRecord }) {
         <input name="tags" defaultValue={m?.tags.join(", ")} className={inputCls} />
       </div>
       <div className="sm:col-span-2">
-        <button type="submit" className="btn-primary" disabled={!hasDb()}>
+        <SubmitButton disabled={!hasDb()}>
           {isNew ? "Add milestone" : "Save"}
-        </button>
+        </SubmitButton>
       </div>
     </form>
   );
 }
 
-export default async function AdminTimelinePage() {
+export default async function AdminTimelinePage({
+  searchParams,
+}: {
+  searchParams?: Record<string, string | string[] | undefined>;
+}) {
   let records = await getMilestoneRecords();
   if (records.length === 0) {
     const defaults = await getMilestones();
@@ -65,6 +71,7 @@ export default async function AdminTimelinePage() {
 
   return (
     <div className="space-y-8">
+      <SavedBanner searchParams={searchParams} />
       <div>
         <h1 className="text-2xl font-bold">Story timeline</h1>
         <p className="mt-1 text-sm text-midnight/55">
@@ -88,13 +95,9 @@ export default async function AdminTimelinePage() {
             <MilestoneForm m={m} />
             <form action={deleteMilestoneAction}>
               <input type="hidden" name="id" value={m.id} />
-              <button
-                type="submit"
-                className="text-sm font-medium text-red-600 hover:underline"
-                disabled={!hasDb()}
-              >
+              <SubmitButton variant="danger" disabled={!hasDb()}>
                 Delete “{m.title}”
-              </button>
+              </SubmitButton>
             </form>
           </div>
         ))}

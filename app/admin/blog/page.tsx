@@ -1,6 +1,8 @@
 import { getPosts, getPost } from "@/lib/content";
 import { hasDb } from "@/lib/db";
 import { savePostAction, deletePostAction } from "@/app/admin/actions";
+import { SubmitButton } from "@/components/admin/SubmitButton";
+import { SavedBanner } from "@/components/admin/SavedBanner";
 import type { BlogPost } from "@/lib/blog";
 
 export const dynamic = "force-dynamic";
@@ -57,15 +59,19 @@ function PostForm({ post }: { post?: BlogPost & { published?: boolean } }) {
         Published
       </label>
       <div>
-        <button type="submit" className="btn-primary" disabled={!hasDb()}>
+        <SubmitButton disabled={!hasDb()}>
           {isNew ? "Create post" : "Save post"}
-        </button>
+        </SubmitButton>
       </div>
     </form>
   );
 }
 
-export default async function AdminBlogPage() {
+export default async function AdminBlogPage({
+  searchParams,
+}: {
+  searchParams?: Record<string, string | string[] | undefined>;
+}) {
   const metas = await getPosts(true);
   const posts = (await Promise.all(metas.map((m) => getPost(m.slug)))).filter(
     (p): p is BlogPost => p !== null
@@ -73,6 +79,7 @@ export default async function AdminBlogPage() {
 
   return (
     <div className="space-y-8">
+      <SavedBanner searchParams={searchParams} />
       <div>
         <h1 className="text-2xl font-bold">Blog</h1>
         <p className="mt-1 text-sm text-midnight/55">
@@ -96,13 +103,9 @@ export default async function AdminBlogPage() {
             <PostForm post={post} />
             <form action={deletePostAction}>
               <input type="hidden" name="slug" value={post.slug} />
-              <button
-                type="submit"
-                className="text-sm font-medium text-red-600 hover:underline"
-                disabled={!hasDb()}
-              >
+              <SubmitButton variant="danger" disabled={!hasDb()}>
                 Delete “{post.title}”
-              </button>
+              </SubmitButton>
             </form>
           </div>
         ))}

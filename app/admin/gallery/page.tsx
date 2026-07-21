@@ -2,6 +2,8 @@ import { getGalleryItems } from "@/lib/content";
 import { hasDb } from "@/lib/db";
 import { ImageField } from "@/components/admin/ImageField";
 import { saveGalleryAction, deleteGalleryAction } from "@/app/admin/actions";
+import { SubmitButton } from "@/components/admin/SubmitButton";
+import { SavedBanner } from "@/components/admin/SavedBanner";
 import type { GalleryItem } from "@/lib/gallery";
 
 export const dynamic = "force-dynamic";
@@ -35,7 +37,12 @@ function ItemForm({ item }: { item?: GalleryItem }) {
       </div>
       <div>
         <label className="mb-1.5 block text-sm font-medium">Sort order</label>
-        <input name="sortOrder" type="number" defaultValue={0} className={inputCls} />
+        <input
+          name="sortOrder"
+          type="number"
+          defaultValue={item?.sortOrder ?? 0}
+          className={inputCls}
+        />
       </div>
       <div>
         <label className="mb-1.5 block text-sm font-medium">Shape</label>
@@ -58,19 +65,24 @@ function ItemForm({ item }: { item?: GalleryItem }) {
         <ImageField defaultValue={item?.src ?? ""} />
       </div>
       <div className="sm:col-span-2 flex items-center gap-3">
-        <button type="submit" className="btn-primary" disabled={!hasDb()}>
+        <SubmitButton disabled={!hasDb()}>
           {isNew ? "Add photo" : "Save"}
-        </button>
+        </SubmitButton>
       </div>
     </form>
   );
 }
 
-export default async function AdminGalleryPage() {
+export default async function AdminGalleryPage({
+  searchParams,
+}: {
+  searchParams?: Record<string, string | string[] | undefined>;
+}) {
   const items = await getGalleryItems();
 
   return (
     <div className="space-y-8">
+      <SavedBanner searchParams={searchParams} />
       <div>
         <h1 className="text-2xl font-bold">Gallery</h1>
         <p className="mt-1 text-sm text-midnight/55">
@@ -94,13 +106,9 @@ export default async function AdminGalleryPage() {
             <ItemForm item={item} />
             <form action={deleteGalleryAction}>
               <input type="hidden" name="id" value={item.id} />
-              <button
-                type="submit"
-                className="text-sm font-medium text-red-600 hover:underline"
-                disabled={!hasDb()}
-              >
+              <SubmitButton variant="danger" disabled={!hasDb()}>
                 Delete “{item.title}”
-              </button>
+              </SubmitButton>
             </form>
           </div>
         ))}
