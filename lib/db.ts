@@ -8,14 +8,42 @@ import { neon, type NeonQueryFunction } from "@neondatabase/serverless";
  * files, so it always builds and deploys.
  */
 
+// NETLIFY_DATABASE_URL is the name Neon's Netlify integration uses.
+const envVar = ["DATABASE_URL", "NETLIFY_DATABASE_URL", "POSTGRES_URL"].find(
+  (name) => process.env[name] !== undefined
+);
+const rawConnectionString = envVar ? process.env[envVar] ?? "" : "";
+
+// Neon's dashboard offers the value wrapped as `psql '...'`, and dashboards
+// keep pasted quotes, so pull out just the URL when there is one.
 const connectionString =
-  process.env.DATABASE_URL ??
-  process.env.NETLIFY_DATABASE_URL ?? // Neon's Netlify integration uses this name
-  process.env.POSTGRES_URL ??
-  "";
+  /postgres(?:ql)?:\/\/[^\s'"]+/i.exec(rawConnectionString)?.[0] ??
+  rawConnectionString;
 
 export function hasDb(): boolean {
   return connectionString.length > 0;
+}
+
+/**
+ * Admin-facing explanation of a failed query: the driver's message plus which
+ * env var and host were used, with the connection string (password) removed.
+ */
+export function describeDbError(err: unknown): string {
+  let message = err instanceof Error ? err.message : String(err);
+  if (connectionString) {
+    message = message.split(connectionString).join("<connection string>");
+  }
+  message = message
+    .replace(/postgres(?:ql)?:\/\/\S*/gi, "<connection string>")
+    .slice(0, 300);
+
+  let host = "invalid URL";
+  try {
+    host = new URL(connectionString).hostname;
+  } catch {
+    /* keep the placeholder */
+  }
+  return `${message} (env var: ${envVar ?? "none"}, host: ${host})`;
 }
 
 let client: NeonQueryFunction<false, false> | null = null;
@@ -35,7 +63,13 @@ let schemaPromise: Promise<void> | null = null;
 
 export function ensureSchema(): Promise<void> {
   if (!hasDb()) return Promise.resolve();
-  if (!schemaPromise) schemaPromise = createSchema();
+  if (!schemaPromise) {
+    schemaPromise = createSchema().catch((err) => {
+      // Don't memoize a failure, or one blip breaks this instance for good.
+      schemaPromise = null;
+      throw err;
+    });
+  }
   return schemaPromise;
 }
 

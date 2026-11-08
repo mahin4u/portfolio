@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/session";
+import { describeDbError } from "@/lib/db";
 import { defaultSite, type SiteConfig, type Accent } from "@/lib/site";
 import type { GalleryItem } from "@/lib/gallery";
 import {
@@ -19,7 +20,7 @@ import {
 
 /**
  * Every action follows the same contract: do the DB work inside try/catch,
- * and ALWAYS end in a redirect — ?saved=1 / ?deleted=1 on success, ?error=1
+ * and ALWAYS end in a redirect — ?saved=1 / ?deleted=1 on success, ?error=<reason>
  * on failure. Nothing here may throw to the client, because an uncaught
  * error in production renders the opaque "Application error: a server-side
  * exception has occurred" page.
@@ -48,7 +49,7 @@ function slugify(input: string): string {
 
 function logAndFail(name: string, err: unknown, backTo: string): never {
   console.error(`[admin action] ${name} failed:`, err);
-  redirect(`${backTo}?error=1`);
+  redirect(`${backTo}?error=${encodeURIComponent(describeDbError(err))}`);
 }
 
 /* ----------------------------- Site settings ----------------------------- */
