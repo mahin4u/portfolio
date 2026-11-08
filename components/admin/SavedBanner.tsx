@@ -12,8 +12,12 @@ export function SavedBanner({
   if (searchParams.error) {
     return (
       <div className="rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm font-medium text-red-800">
-        ✗ Saving failed. Check that the database is reachable (DATABASE_URL) —
-        details are in the server logs.
+        ✗ Saving failed. Check that the database is reachable (DATABASE_URL).
+        {typeof searchParams.error === "string" && (
+          <code className="mt-2 block break-words font-mono text-xs font-normal">
+            {searchParams.error}
+          </code>
+        )}
       </div>
     );
   }
